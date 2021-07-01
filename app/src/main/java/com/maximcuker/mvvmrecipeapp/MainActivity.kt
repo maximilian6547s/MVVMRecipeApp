@@ -2,9 +2,7 @@ package com.maximcuker.mvvmrecipeapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -35,12 +33,26 @@ class MainActivity : AppCompatActivity() {
                     contentScale = ContentScale.Crop
                 )
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Happy Meal",
-                        style = TextStyle(
-                            fontSize = TextUnit.Sp(26)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Happy Meal",
+                            style = TextStyle(
+                                fontSize = TextUnit.Sp(26)
+                            )
                         )
-                    )
+                        Text(
+                            text = "$5.99",
+                            style = TextStyle(
+                                color = Color.Green,
+                                fontSize = TextUnit.Sp(17)
+                            ),
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+
+                    }
                     Spacer(modifier = Modifier.padding(10.dp))
                     Text(
                         text = "900 calories",
@@ -49,15 +61,51 @@ class MainActivity : AppCompatActivity() {
                         )
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
-                    Text(
-                        text = "$5.99",
-                        style = TextStyle(
-                            color = Color.Green,
-                            fontSize = TextUnit.Sp(17)
-                        )
-                    )
+                    Button(
+                        onClick = {},
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(text = "Order now")
+                    }
                 }
             }
         }
+
+//        setContent {
+//            Column() {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(200.dp)
+//                        .border(border = BorderStroke(width = 1.dp, color = Color.Black)),
+//                    verticalArrangement = Arrangement.SpaceBetween
+//                ) {
+//                    Text(
+//                        text = "ITEM1",
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    )
+//                    Text(
+//                        text = "ITEM2",
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    )
+//                }
+//                Spacer(modifier = Modifier.padding(20.dp))
+//                Row(
+//                    modifier = Modifier
+//                        .width(200.dp)
+//                        .height(200.dp)
+//                        .border(border = BorderStroke(width = 1.dp, color = Color.Black)),
+//                    horizontalArrangement = Arrangement.Center
+//                ) {
+//                    Text(
+//                        text = "ITEM2",
+//                        modifier = Modifier.align(Alignment.CenterVertically)
+//                    )
+//                }
+//
+//            }
+//
+//        }
+
     }
 }
