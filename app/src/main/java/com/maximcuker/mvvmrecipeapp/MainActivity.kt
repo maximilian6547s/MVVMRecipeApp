@@ -19,57 +19,61 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            ScrollableColumn(
-                modifier = Modifier.fillMaxHeight().fillMaxWidth()
-                    .background(color = Color(0xFFF2F2F2))
-            ) {
-                Image(
-                    bitmap = imageFromResource(
-                        res = resources,
-                        resId = R.drawable.happy_meal_small
-                    ),
-                    modifier = Modifier.height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Happy Meal",
-                            style = TextStyle(
-                                fontSize = TextUnit.Sp(26)
-                            )
-                        )
-                        Text(
-                            text = "$5.99",
-                            style = TextStyle(
-                                color = Color.Green,
-                                fontSize = TextUnit.Sp(17)
-                            ),
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-
-                    }
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    Text(
-                        text = "900 calories",
-                        style = TextStyle(
-                            fontSize = TextUnit.Sp(17)
-                        )
-                    )
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    Button(
-                        onClick = {},
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(text = "Order now")
-                    }
-                }
-            }
-        }
+        setContentView(R.layout.activity_main)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, RecipeListFragment())
+            .commit()
+//        setContent {
+//            ScrollableColumn(
+//                modifier = Modifier.fillMaxHeight().fillMaxWidth()
+//                    .background(color = Color(0xFFF2F2F2))
+//            ) {
+//                Image(
+//                    bitmap = imageFromResource(
+//                        res = resources,
+//                        resId = R.drawable.happy_meal_small
+//                    ),
+//                    modifier = Modifier.height(300.dp),
+//                    contentScale = ContentScale.Crop
+//                )
+//                Column(modifier = Modifier.padding(16.dp)) {
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceBetween
+//                    ) {
+//                        Text(
+//                            text = "Happy Meal",
+//                            style = TextStyle(
+//                                fontSize = TextUnit.Sp(26)
+//                            )
+//                        )
+//                        Text(
+//                            text = "$5.99",
+//                            style = TextStyle(
+//                                color = Color.Green,
+//                                fontSize = TextUnit.Sp(17)
+//                            ),
+//                            modifier = Modifier.align(Alignment.CenterVertically)
+//                        )
+//
+//                    }
+//                    Spacer(modifier = Modifier.padding(10.dp))
+//                    Text(
+//                        text = "900 calories",
+//                        style = TextStyle(
+//                            fontSize = TextUnit.Sp(17)
+//                        )
+//                    )
+//                    Spacer(modifier = Modifier.padding(10.dp))
+//                    Button(
+//                        onClick = {},
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    ) {
+//                        Text(text = "Order now")
+//                    }
+//                }
+//            }
+//        }
 
 //        setContent {
 //            Column() {
