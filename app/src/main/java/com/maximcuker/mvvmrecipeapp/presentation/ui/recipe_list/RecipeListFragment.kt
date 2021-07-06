@@ -19,16 +19,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.maximcuker.mvvmrecipeapp.R
+import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
 
-    val viewModel:RecipeListViewModel by activityViewModels()
+    private val viewModel:RecipeListViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("RecipeListFragment: ${viewModel}")
+        println("RecipeListFragment: ${viewModel.getRandomString()}")
+        println("RecipeListFragment: ${viewModel.getRepo()}")
+        println("RecipeListFragment: ${viewModel.getToken()}")
     }
 
     override fun onCreateView(

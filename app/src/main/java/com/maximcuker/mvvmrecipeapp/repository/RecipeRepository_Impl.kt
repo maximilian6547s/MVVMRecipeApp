@@ -3,6 +3,8 @@ package com.maximcuker.mvvmrecipeapp.repository
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.network.RecipeService
 import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
+import javax.inject.Inject
+import javax.inject.Singleton
 
 class RecipeRepository_Impl(
     private val recipeService: RecipeService,
