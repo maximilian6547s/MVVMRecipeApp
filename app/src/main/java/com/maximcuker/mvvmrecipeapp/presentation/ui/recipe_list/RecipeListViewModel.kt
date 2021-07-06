@@ -11,6 +11,7 @@ import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
 import com.maximcuker.mvvmrecipeapp.repository.RecipeRepository
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Named
 
 class RecipeListViewModel
@@ -21,9 +22,13 @@ constructor(
 
 ) : ViewModel() {
 
-    val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
+    val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
     init {
+        newSearch()
+    }
+
+    fun newSearch() {
         viewModelScope.launch {
             val result = repository.search(token,1, "chicken")
             recipes.value = result

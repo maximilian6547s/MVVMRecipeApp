@@ -1,9 +1,7 @@
 package com.maximcuker.mvvmrecipeapp.domain.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import java.util.*
 
-@Parcelize
 data class Recipe (
     val id: Int? = null,
     val title: String? = null,
@@ -13,7 +11,7 @@ data class Recipe (
     val sourceUrl: String? = null,
     val description: String? = null,
     val cookingInstructions: String? = null,
-    val ingredients: List<String> = listOf(),
+    val ingredients: List<String> = ArrayList(),
     val dateAdded: String? = null,
     val dateUpdated: String? = null,
-):Parcelable
+)
