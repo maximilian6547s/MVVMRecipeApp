@@ -1,28 +1,17 @@
-package com.maximcuker.mvvmrecipeapp
+package com.maximcuker.mvvmrecipeapp.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.maximcuker.mvvmrecipeapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
+@AndroidEntryPoint //entry point also must be in an activity(host)
 class MainActivity : AppCompatActivity() {
-
-    private val TAG = "AppDebug"
-
-    @Inject
-    lateinit var app: BaseApplication
-
-    @Inject
-    lateinit var someRandomString: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
-
-        Log.d(TAG, "OnCrate: ${someRandomString}")
-        Log.d(TAG, "OnCreate: ${app}")
     }
 }
