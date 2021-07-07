@@ -31,6 +31,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.maximcuker.mvvmrecipeapp.R
 import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
+import com.maximcuker.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
 import com.maximcuker.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.maximcuker.mvvmrecipeapp.presentation.components.RecipeCard
 import com.maximcuker.mvvmrecipeapp.presentation.components.SearchAppBar
@@ -57,6 +58,8 @@ class RecipeListFragment : Fragment() {
 
                 val selectedCategory = viewModel.selectedCategory.value
 
+                val loading = viewModel.loading.value
+
                 Column() {
                     SearchAppBar(
                         query = query,
@@ -66,14 +69,20 @@ class RecipeListFragment : Fragment() {
                         selectedCategory = selectedCategory,
                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                         onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition)
-                    LazyColumn {
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-                        }
-                    }
 
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        LazyColumn {
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                            }
+                        }
+
+                        CircularIndeterminateProgressBar(isDisplayed = loading)
+                    }
                 }
             }
         }
