@@ -25,24 +25,31 @@ constructor(
 
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
 
+    //need fo tracking position of category
+    var categoryScrollPosition: Float = 0f
+
     init {
         newSearch()
     }
 
     fun newSearch() {
         viewModelScope.launch {
-            val result = repository.search(token,1, query = query.value)
+            val result = repository.search(token, 1, query = query.value)
             recipes.value = result
         }
     }
 
-    fun onQueryChanged(query:String) {
+    fun onQueryChanged(query: String) {
         this.query.value = query
     }
 
-    fun onSelectedCategoryChanged(category:String) {
+    fun onSelectedCategoryChanged(category: String) {
         val newCategory = getFoodCategory(category)
         selectedCategory.value = newCategory
         onQueryChanged(category)
+    }
+
+    fun onChangedCategoryScrollPosition(position: Float) {
+        categoryScrollPosition = position
     }
 }
