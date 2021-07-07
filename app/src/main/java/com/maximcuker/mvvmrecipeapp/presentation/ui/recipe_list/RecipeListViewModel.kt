@@ -27,12 +27,12 @@ constructor(
     val query = mutableStateOf("chicken")
 
     init {
-        newSearch()
+        newSearch("chicken")
     }
 
-    fun newSearch() {
+    fun newSearch(query:String) {
         viewModelScope.launch {
-            val result = repository.search(token,1, "chicken")
+            val result = repository.search(token,1, query = query)
             recipes.value = result
         }
     }
