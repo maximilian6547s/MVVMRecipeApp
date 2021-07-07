@@ -24,6 +24,8 @@ constructor(
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
 
+    val query = mutableStateOf("chicken")
+
     init {
         newSearch()
     }
@@ -33,5 +35,9 @@ constructor(
             val result = repository.search(token,1, "chicken")
             recipes.value = result
         }
+    }
+
+    fun onQueryChanged(query:String) {
+        this.query.value = query
     }
 }
