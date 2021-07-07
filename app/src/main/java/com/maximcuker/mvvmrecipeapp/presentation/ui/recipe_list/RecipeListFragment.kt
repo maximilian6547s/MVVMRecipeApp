@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -29,6 +30,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.maximcuker.mvvmrecipeapp.R
 import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
+import com.maximcuker.mvvmrecipeapp.presentation.components.FoodCategoryChip
 import com.maximcuker.mvvmrecipeapp.presentation.components.RecipeCard
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +57,7 @@ class RecipeListFragment : Fragment() {
                     Surface(
                         elevation = 8.dp,
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colors.primary
+                        color = Color.White
                     ) {
                         Column() {
                             Row(
@@ -92,10 +94,12 @@ class RecipeListFragment : Fragment() {
                             }
                             ScrollableRow(modifier = Modifier.fillMaxWidth()) {
                                 for (category in getAllFoodCategories()) {
-                                    Text(text = category.value,
-                                        style = MaterialTheme.typography.body2,
-                                        color = MaterialTheme.colors.secondary,
-                                        modifier = Modifier.padding(8.dp))
+                                    FoodCategoryChip(category = category.value,
+                                        onExecuteSearch = {
+                                            viewModel.onQueryChanged(it)
+                                            viewModel.newSearch(it)
+                                        }
+                                    )
                                 }
                             }
 
