@@ -31,10 +31,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.maximcuker.mvvmrecipeapp.R
 import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
-import com.maximcuker.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
-import com.maximcuker.mvvmrecipeapp.presentation.components.FoodCategoryChip
-import com.maximcuker.mvvmrecipeapp.presentation.components.RecipeCard
-import com.maximcuker.mvvmrecipeapp.presentation.components.SearchAppBar
+import com.maximcuker.mvvmrecipeapp.presentation.components.*
+import com.maximcuker.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -60,7 +58,7 @@ class RecipeListFragment : Fragment() {
 
                 val loading = viewModel.loading.value
 
-                Column() {
+                Column {
                     SearchAppBar(
                         query = query,
                         onQueryChanged = viewModel::onQueryChanged,
@@ -68,21 +66,36 @@ class RecipeListFragment : Fragment() {
                         scrollPosition = viewModel.categoryScrollPosition,
                         selectedCategory = selectedCategory,
                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                        onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition)
+                        onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition
+                    )
 
-                    Box(
-                        modifier = Modifier.fillMaxSize()
+                    Row(
+                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        LazyColumn {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, recipe ->
-                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
-                            }
-                        }
+                        val state = remember { mutableStateOf(IDLE) }
 
-                        CircularIndeterminateProgressBar(isDisplayed = loading)
+                        AnimatedHeartButton(
+                            modifier = Modifier,
+                            buttonState = state,
+                            onToggle = { state.value = if (state.value == IDLE) ACTIVE else IDLE }
+                        )
+
                     }
+                    PulsingDemo()
+//                    Box(
+//                        modifier = Modifier.fillMaxSize()
+//                    ) {
+//                        LazyColumn {
+//                            itemsIndexed(
+//                                items = recipes
+//                            ) { index, recipe ->
+//                                RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+//                            }
+//                        }
+//
+//                        CircularIndeterminateProgressBar(isDisplayed = loading)
+//                    }
                 }
             }
         }
