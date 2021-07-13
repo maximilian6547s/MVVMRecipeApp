@@ -79,6 +79,8 @@ class RecipeListFragment : Fragment() {
 
                     val loading = viewModel.loading.value
 
+                    val page = viewModel.page.value
+
                     val scaffoldState = rememberScaffoldState()
 
                     Scaffold(
@@ -96,16 +98,14 @@ class RecipeListFragment : Fragment() {
                                             )
                                         }
                                     } else {
-                                        viewModel::newSearch
+                                        viewModel.newSearch()
                                     }
                                 },
                                 scrollPosition = viewModel.categoryScrollPosition,
                                 selectedCategory = selectedCategory,
                                 onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                                 onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition,
-                                onToggleTheme = {
-                                    application.toggleLightTheme()
-                                }
+                                onToggleTheme = application::toggleLightTheme
                             )
                         },
                         scaffoldState = scaffoldState,
@@ -117,14 +117,18 @@ class RecipeListFragment : Fragment() {
                             modifier = Modifier.fillMaxSize()
                                 .background(color = MaterialTheme.colors.background)
                         ) {
-                            if (loading) {
+                            if (loading && recipes.isEmpty()) {
                                 LoadingRecipeListShimmer(imageHeight = 250.dp)
                             } else {
                                 LazyColumn {
                                     itemsIndexed(
                                         items = recipes
                                     ) { index, recipe ->
-                                        RecipeCard(recipe = recipe, onClick = { /*TODO*/ })
+                                        viewModel.onChangeRecipeScrollPosition(index)
+                                        if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
+                                            viewModel.nextPage()
+                                        }
+                                        RecipeCard(recipe = recipe, onClick = {})
                                     }
                                 }
                             }

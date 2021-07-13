@@ -33,7 +33,7 @@ fun SearchAppBar(
     Surface(
         elevation = 8.dp,
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colors.surface
+        color = MaterialTheme.colors.secondary
     ) {
         Column {
             Row(
@@ -62,7 +62,7 @@ fun SearchAppBar(
                             softKeyboardController?.hideSoftwareKeyboard()
                         }
                     },
-                    textStyle = MaterialTheme.typography.button,
+                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                     backgroundColor = MaterialTheme.colors.surface,
                 )
                 ConstraintLayout(
