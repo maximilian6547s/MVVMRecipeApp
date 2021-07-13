@@ -13,6 +13,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +49,7 @@ import javax.inject.Inject
 class RecipeListFragment : Fragment() {
 
     @Inject
-    lateinit var application:BaseApplication
+    lateinit var application: BaseApplication
 
     private val viewModel: RecipeListViewModel by activityViewModels()
 
@@ -70,20 +72,28 @@ class RecipeListFragment : Fragment() {
 
                     val loading = viewModel.loading.value
 
-                    Column {
-                        SearchAppBar(
-                            query = query,
-                            onQueryChanged = viewModel::onQueryChanged,
-                            onExecuteSearch = viewModel::newSearch,
-                            scrollPosition = viewModel.categoryScrollPosition,
-                            selectedCategory = selectedCategory,
-                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                            onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition,
-                            onToggleTheme = {
-                                application.toggleLightTheme()
-                            }
-                        )
-//                    LoadingRecipeListShimmer(imageHeight = 250.dp)
+                    Scaffold(
+                        topBar = {
+                            SearchAppBar(
+                                query = query,
+                                onQueryChanged = viewModel::onQueryChanged,
+                                onExecuteSearch = viewModel::newSearch,
+                                scrollPosition = viewModel.categoryScrollPosition,
+                                selectedCategory = selectedCategory,
+                                onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                                onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition,
+                                onToggleTheme = {
+                                    application.toggleLightTheme()
+                                }
+                            )
+                        },
+                        bottomBar = {
+                            MyBottomBar()
+                        },
+                        drawerContent = {
+                            MyDrawer()
+                        }
+                    ) {
                         Box(
                             modifier = Modifier.fillMaxSize()
                                 .background(color = MaterialTheme.colors.background)
@@ -99,13 +109,45 @@ class RecipeListFragment : Fragment() {
                                     }
                                 }
                             }
-
                             CircularIndeterminateProgressBar(isDisplayed = loading)
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MyBottomBar() {
+    BottomNavigation(
+        elevation = 12.dp
+    ) {
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.BrokenImage) },
+            selected = false,
+            onClick = { /*TODO*/ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.Search) },
+            selected = true,
+            onClick = { /*TODO*/ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.AccountBalanceWallet) },
+            selected = false,
+            onClick = { /*TODO*/ }
+        )
+    }
+}
+
+@Composable
+fun MyDrawer() {
+    Column() {
+        Text(text = "Item1")
+        Text(text = "Item2")
+        Text(text = "Item3")
+        Text(text = "Item4")
     }
 }
 
