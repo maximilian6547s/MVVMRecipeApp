@@ -45,6 +45,7 @@ import com.maximcuker.mvvmrecipeapp.presentation.components.*
 import com.maximcuker.mvvmrecipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
 import com.maximcuker.mvvmrecipeapp.presentation.components.util.SnackbarController
 import com.maximcuker.mvvmrecipeapp.presentation.theme.AppTheme
+import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -98,7 +99,7 @@ class RecipeListFragment : Fragment() {
                                             )
                                         }
                                     } else {
-                                        viewModel.newSearch()
+                                        viewModel.onTriggerEvent(NewSearchEvent)
                                     }
                                 },
                                 scrollPosition = viewModel.categoryScrollPosition,
@@ -126,7 +127,7 @@ class RecipeListFragment : Fragment() {
                                     ) { index, recipe ->
                                         viewModel.onChangeRecipeScrollPosition(index)
                                         if ((index + 1) >= (page * PAGE_SIZE) && !loading) {
-                                            viewModel.nextPage()
+                                            viewModel.onTriggerEvent(NextPageEvent)
                                         }
                                         RecipeCard(recipe = recipe, onClick = {})
                                     }
