@@ -69,7 +69,11 @@ class RecipeFragment : Fragment() {
                 val recipe = viewModel.recipe.value
 
                 val scaffoldState = rememberScaffoldState()
-                AppTheme(darkTheme = application.isDark.value) {
+                AppTheme(
+                    darkTheme = application.isDark.value,
+                    displayProgressBar = loading,
+                    scaffoldState = scaffoldState
+                ) {
                     Scaffold(
                         scaffoldState = scaffoldState,
                         snackbarHost = {
@@ -92,14 +96,6 @@ class RecipeFragment : Fragment() {
                                     }
                                 }
                             }
-                            CircularIndeterminateProgressBar(isDisplayed = loading)
-                            DefaultSnackbar(
-                                snackbarHostState = scaffoldState.snackbarHostState,
-                                onDismiss = {
-                                    scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
-                                },
-                                modifier = Modifier.align(Alignment.BottomCenter)
-                            )
                         }
                     }
                 }
