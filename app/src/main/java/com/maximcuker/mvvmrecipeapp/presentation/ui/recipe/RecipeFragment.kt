@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.TextStyle
@@ -16,14 +18,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipeFragment : Fragment() {
 
-    val viewModel: RecipeListViewModel by activityViewModels() //using activityViewModels() if you want to share view model between multiple fragments? if not use by viewModels()
+    private var recipeId: MutableState<Int> = mutableStateOf(-1)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("RecipeFragment: ${viewModel}")
+        CoroutineScope(Main).launch {
+            delay(1000)
+            arguments?.getInt("recipeId")?.let { rId ->
+                recipeId.value = rId
+            }
+        }
     }
 
     override fun onCreateView(
@@ -32,11 +44,17 @@ class RecipeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
-            setContent { 
+            setContent {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "RECIPE FRAGMENT",
+                    Text(
+                        text = if (recipeId.value != -1) {
+                            "Selected recipe id: ${recipeId.value}"
+                        } else {
+                            "Loading..."
+                        },
                         style = TextStyle(
-                            fontSize = TextUnit.Sp(21)               )
+                            fontSize = TextUnit.Sp(21)
+                        )
                     )
                 }
             }
