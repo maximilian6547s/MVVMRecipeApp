@@ -1,9 +1,13 @@
 package com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list
 
+import android.net.http.SslCertificate.restoreState
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
@@ -18,11 +22,17 @@ import javax.inject.Named
 
 const val PAGE_SIZE = 30
 
+const val STATE_KEY_PAGE = "recipe.state.page.key"
+const val STATE_KEY_QUERY = "recipe.state.query.key"
+const val STATE_KEY_LIST_POSITION = "recipe.state.query.list_position"
+const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
+
 class RecipeListViewModel
 @ViewModelInject
 constructor(
     private val repository: RecipeRepository,
-    private @Named("auth_token") val token: String
+    private @Named("auth_token") val token: String,
+    @Assisted private val savedStateHandle: SavedStateHandle
 
 ) : ViewModel() {
 
@@ -42,7 +52,25 @@ constructor(
     private var recipeListScrollPosition = 0
 
     init {
-        onTriggerEvent(NewSearchEvent)
+        // restore state if process dies
+        savedStateHandle.get<Int>(STATE_KEY_PAGE)?.let {
+            setPage(it)
+        }
+        savedStateHandle.get<String>(STATE_KEY_QUERY)?.let {
+            setQuery(it)
+        }
+        savedStateHandle.get<Int>(STATE_KEY_LIST_POSITION)?.let {
+            setListScrollPosition(it)
+        }
+        savedStateHandle.get<FoodCategory>(STATE_KEY_SELECTED_CATEGORY)?.let {
+            setSelectedCategory(it)
+        }
+
+        if (recipeListScrollPosition != 0) {
+            onTriggerEvent(RestoreStateEvent)
+        } else {
+            onTriggerEvent(NewSearchEvent)
+        }
     }
 
     fun onTriggerEvent(event: RecipeListEvent) {
@@ -55,9 +83,29 @@ constructor(
                     is NextPageEvent -> {
                         nextPage()
                     }
+                    is RestoreStateEvent -> {
+                        restoreState()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "onTriggerEvent: Exception: ${e}, ${e.cause}")
+            }
+        }
+    }
+
+    private suspend fun restoreState() {
+        loading.value = true
+        val results: MutableList<Recipe> = mutableStateListOf()
+        for (p in 1..page.value) {
+            val result = repository.search(
+                token = token,
+                page = p,
+                query = query.value
+            )
+            results.addAll(result)
+            if (p == page.value) {
+                recipes.value = results
+                loading.value = false
             }
         }
     }
@@ -110,11 +158,11 @@ constructor(
     }
 
     private fun incrementPage() {
-        page.value = page.value + 1
+        setPage(page.value + 1)
     }
 
     fun onChangeRecipeScrollPosition(position: Int) {
-        recipeListScrollPosition = position
+        setListScrollPosition(position)
     }
 
     //Called when new search is executed
@@ -128,20 +176,40 @@ constructor(
     }
 
     private fun clearSelectedCategory() {
-        selectedCategory.value = null
+        setSelectedCategory(null)
     }
 
     fun onQueryChanged(query: String) {
-        this.query.value = query
+        setQuery(query)
     }
 
     fun onSelectedCategoryChanged(category: String) {
         val newCategory = getFoodCategory(category)
-        selectedCategory.value = newCategory
+        setSelectedCategory(newCategory)
         onQueryChanged(category)
     }
 
     fun onChangedCategoryScrollPosition(position: Float) {
         categoryScrollPosition = position
+    }
+
+    private fun setListScrollPosition(position: Int) {
+        recipeListScrollPosition = position
+        savedStateHandle.set(STATE_KEY_LIST_POSITION, position)
+    }
+
+    private fun setPage(page: Int) {
+        this.page.value = page
+        savedStateHandle.set(STATE_KEY_PAGE, page)
+    }
+
+    private fun setSelectedCategory(category: FoodCategory?) {
+        selectedCategory.value = category
+        savedStateHandle.set(STATE_KEY_SELECTED_CATEGORY, category)
+    }
+
+    private fun setQuery(query: String) {
+        this.query.value = query
+        savedStateHandle.set(STATE_KEY_QUERY, query)
     }
 }
