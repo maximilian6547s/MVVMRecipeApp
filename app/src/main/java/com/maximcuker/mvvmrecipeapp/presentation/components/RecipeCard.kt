@@ -34,37 +34,39 @@ fun RecipeCard(
         elevation = 8.dp
     ) {
         Column() {
-            recipe.featuredImage?.let {url ->
+            recipe.featuredImage?.let { url ->
                 val image = loadPicture(url = url, defaultImage = DEFAULT_RECIPE_IMAGE).value
-                image?.let {img->
+                image?.let { img ->
                     Image(
                         bitmap = img.asImageBitmap(),
+                        contentDescription = "Recipe featured image",
                         modifier = Modifier.fillMaxWidth()
                             .preferredHeight(225.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
             }
-            recipe.title?.let {title ->
-                Row (
+            recipe.title?.let { title ->
+                Row(
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
-                ){
+                ) {
                     Text(
                         text = title,
                         modifier = Modifier.fillMaxWidth(0.85f)
                             .wrapContentWidth(Alignment.Start),
                         style = MaterialTheme.typography.h3
                     )
-                    Text(text = recipe.rating.toString(),
+                    Text(
+                        text = recipe.rating.toString(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth(Alignment.End)
                             .align(Alignment.CenterVertically),
                         style = MaterialTheme.typography.h5
-                        )
+                    )
                 }
-                
+
             }
         }
     }

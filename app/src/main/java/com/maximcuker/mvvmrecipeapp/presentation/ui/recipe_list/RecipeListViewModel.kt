@@ -14,10 +14,12 @@ import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.maximcuker.mvvmrecipeapp.repository.RecipeRepository
 import com.maximcuker.mvvmrecipeapp.util.TAG
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
+import javax.inject.Inject
 import javax.inject.Named
 
 const val PAGE_SIZE = 30
@@ -27,12 +29,13 @@ const val STATE_KEY_QUERY = "recipe.state.query.key"
 const val STATE_KEY_LIST_POSITION = "recipe.state.query.list_position"
 const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 
+@HiltViewModel
 class RecipeListViewModel
-@ViewModelInject
+@Inject
 constructor(
     private val repository: RecipeRepository,
     private @Named("auth_token") val token: String,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 
 ) : ViewModel() {
 

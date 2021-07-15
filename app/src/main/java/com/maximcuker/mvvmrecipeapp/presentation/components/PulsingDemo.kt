@@ -38,6 +38,7 @@ fun PulsingDemo() {
             modifier = Modifier.align(Alignment.CenterVertically)
                 .height(pulseMagnitude.dp)
                 .width(pulseMagnitude.dp),
+            contentDescription = "Image",
             imageVector = Icons.Default.Favorite
         )
     }

@@ -59,7 +59,7 @@ class RecipeListFragment : Fragment() {
 
     private val snackbarController = SnackbarController(lifecycleScope)
 
-    private val viewModel: RecipeListViewModel by activityViewModels()
+    private val viewModel: RecipeListViewModel by viewModels()
 
     @ExperimentalMaterialApi
     override fun onCreateView(
@@ -69,6 +69,7 @@ class RecipeListFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+
                 val recipes = viewModel.recipes.value
 
                 val query = viewModel.query.value
@@ -82,9 +83,9 @@ class RecipeListFragment : Fragment() {
                 val scaffoldState = rememberScaffoldState()
 
                 AppTheme(
-                    darkTheme = application.isDark.value,
                     displayProgressBar = loading,
-                    scaffoldState = scaffoldState
+                    scaffoldState = scaffoldState,
+                    darkTheme = application.isDark.value,
                 ) {
 
                     Scaffold(
@@ -97,37 +98,37 @@ class RecipeListFragment : Fragment() {
                                         snackbarController.getScope().launch {
                                             snackbarController.showSnackbar(
                                                 scaffoldState = scaffoldState,
-                                                message = "Invalid category :MILK!",
-                                                actionLabel = "Hide",
+                                                message = "Invalid category: MILK",
+                                                actionLabel = "Hide"
                                             )
                                         }
                                     } else {
-                                        viewModel.onTriggerEvent(NewSearchEvent)
+                                        viewModel.onTriggerEvent(RecipeListEvent.NewSearchEvent)
                                     }
                                 },
-                                scrollPosition = viewModel.categoryScrollPosition,
+                                categories = getAllFoodCategories(),
                                 selectedCategory = selectedCategory,
                                 onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                                onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition,
                                 onToggleTheme = application::toggleLightTheme
                             )
                         },
                         scaffoldState = scaffoldState,
                         snackbarHost = {
                             scaffoldState.snackbarHostState
-                        }
-                    ) {
+                        },
+
+                        ) {
                         RecipeList(
                             loading = loading,
                             recipes = recipes,
-                            onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
+                            onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                             page = page,
-                            onNextPage = {
-                                viewModel.onTriggerEvent(NextPageEvent)
-                            },
-                            scaffoldState = scaffoldState,
-                            snackbarController = snackbarController,
-                            navController = findNavController()
+                            onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
+                            onNavigateToRecipeDetailScreen = {
+                                val bundle = Bundle()
+                                bundle.putInt("recipeId", it)
+                                findNavController().navigate(R.id.viewRecipe, bundle)
+                            }
                         )
                     }
                 }

@@ -62,7 +62,8 @@ private fun HeartButton(
         loadPicture(drawable = R.drawable.heart_red).value?.let { image ->
             Image(
                 bitmap = image.asImageBitmap(),
-                modifier = Modifier.clickable(onClick = onToggle, indication = null)
+                contentDescription = "Heart",
+                modifier = Modifier.clickable(onClick = onToggle)
                     .width(state[heartSize])
                     .height(state[heartSize])
             )
@@ -71,7 +72,8 @@ private fun HeartButton(
         loadPicture(drawable = R.drawable.heart_grey).value?.let { image ->
             Image(
                 bitmap = image.asImageBitmap(),
-                modifier = Modifier.clickable(onClick = onToggle, indication = null)
+                contentDescription = "Heart",
+                modifier = Modifier.clickable(onClick = onToggle)
                     .width(state[heartSize])
                     .height(state[heartSize])
             )

@@ -14,19 +14,22 @@ import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.STATE_KEY_SELECTED_CATEGORY
 import com.maximcuker.mvvmrecipeapp.repository.RecipeRepository
 import com.maximcuker.mvvmrecipeapp.util.TAG
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 import javax.inject.Named
 
 const val STATE_KEY_RECIPE = "state.key.recipe"
 
+@HiltViewModel
 class RecipeViewModel
-@ViewModelInject
+@Inject
 constructor(
     private val recipeRepository: RecipeRepository,
     private @Named("auth_token") val token: String,
-    @Assisted private val state: SavedStateHandle,
+    private val state: SavedStateHandle,
 ) : ViewModel() {
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)

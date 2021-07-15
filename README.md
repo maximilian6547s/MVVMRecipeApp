@@ -1,6 +1,9 @@
 # MVVMRecipeApp
 
 Recipe App<br>
+training application from courses:<br>
+https://codingwithmitch.com/courses/jetpack-compose-mvvm-for-beginners/ <br>
+https://codingwithmitch.com/courses/food2fork-recipe-app/demo/ <br>
 <br>
 Main Features:<br>
 -Kotlin<br>
@@ -14,6 +17,12 @@ Main Features:<br>
 -App Themes<br>
 -Custom Fonts<br>
 -Light and Dark theme<br>
+-Compose ONLY navigation (single activity, zero fragments)<br>
+-Datastore (New Shared Preferences)<br>
+-Database caching<br>
+-Use-cases<br>
+-Unit Testing<br>
+-Dependency management with Kotlin kts<br>
 -Toggle between themes<br><br>
 
 Compose features:<br>
