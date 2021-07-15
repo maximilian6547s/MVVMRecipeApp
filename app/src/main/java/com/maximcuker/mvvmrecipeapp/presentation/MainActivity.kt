@@ -7,10 +7,8 @@ import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.hilt.navigation.HiltViewModelFactory
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.maximcuker.mvvmrecipeapp.R
+import androidx.navigation.NavType
+import androidx.navigation.compose.*
 import com.maximcuker.mvvmrecipeapp.presentation.navigation.Screen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeViewModel
@@ -40,12 +38,16 @@ class MainActivity : AppCompatActivity() {
                     RecipeListScreen(
                         isDarkTheme = (application as BaseApplication).isDark.value,
                         onToggleTheme = (application as BaseApplication)::toggleLightTheme,
+                        onNavigateToRecipeDetailScreen = navController::navigate,
                         viewModel = viewModel
                     )
                 }
 
                 composable(
-                    route = Screen.RecipeDetail.route
+                    route = Screen.RecipeDetail.route + "/{recipeId}",
+                    arguments = listOf(navArgument("recipeId") {
+                        type = NavType.IntType
+                    })
                 ) { navBackStackEntry ->
                     val factory = HiltViewModelFactory(
                         AmbientContext.current,
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                     val viewModel: RecipeViewModel = viewModel("RecipeViewModel", factory)
                     RecipeDetailScreen(
                         isDarkTheme = (application as BaseApplication).isDark.value,
-                        recipeId = 1, //hardcoded fo now cause we dont have a mechanism for passing arguments to composables
+                        recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel
                     )
 

@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import com.maximcuker.mvvmrecipeapp.R
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.presentation.components.util.SnackbarController
+import com.maximcuker.mvvmrecipeapp.presentation.navigation.Screen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.PAGE_SIZE
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ fun RecipeList(
     onChangeScrollPosition: (Int) -> Unit,
     page: Int,
     onTriggerNextPage: () -> Unit,
-    onNavigateToRecipeDetailScreen: (Int) -> Unit,
+    onNavigateToRecipeDetailScreen: (String) -> Unit,
 ){
     Box(modifier = Modifier
         .background(color = MaterialTheme.colors.surface)
@@ -52,7 +53,8 @@ fun RecipeList(
                     RecipeCard(
                         recipe = recipe,
                         onClick = {
-                            recipe.id?.let { onNavigateToRecipeDetailScreen(it) }
+                            val route = Screen.RecipeDetail.route + "/${recipe.id}"
+                            recipe.id?.let { onNavigateToRecipeDetailScreen(route) }
                         }
                     )
                 }

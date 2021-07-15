@@ -3,12 +3,14 @@ package com.maximcuker.mvvmrecipeapp.presentation.ui.recipe
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.maximcuker.mvvmrecipeapp.presentation.components.IMAGE_HEIGHT
 import com.maximcuker.mvvmrecipeapp.presentation.components.LoadingRecipeShimmer
 import com.maximcuker.mvvmrecipeapp.presentation.components.RecipeView
@@ -25,7 +27,7 @@ fun RecipeDetailScreen(
     ) {
 
     Log.d(TAG, "RecipeDetailScreen : ${viewModel}")
-    Text(text = "Recipe detail screen: ${recipeId}")
+    Text("Recipe Id: ${recipeId}",style = MaterialTheme.typography.h2)
 //    val loading = viewModel.loading.value
 //
 //    val recipe = viewModel.recipe.value

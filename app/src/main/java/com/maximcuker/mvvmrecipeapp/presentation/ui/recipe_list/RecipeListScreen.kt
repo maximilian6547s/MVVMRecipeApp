@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 fun RecipeListScreen(
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    onNavigateToRecipeDetailScreen: (String) -> Unit,
     viewModel: RecipeListViewModel,
 ) {
 
@@ -66,9 +67,7 @@ fun RecipeListScreen(
                 onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
                 page = page,
                 onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
-                onNavigateToRecipeDetailScreen = {
-                    TODO("Navigate to detail screen")
-                }
+                onNavigateToRecipeDetailScreen = onNavigateToRecipeDetailScreen
             )
         }
 
