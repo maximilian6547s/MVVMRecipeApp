@@ -11,7 +11,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import com.maximcuker.mvvmrecipeapp.presentation.navigation.Screen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailScreen
-import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeViewModel
+import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailViewModel
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                         AmbientContext.current,
                         navBackStackEntry
                     )
-                    val viewModel: RecipeViewModel = viewModel("RecipeViewModel", factory)
+                    val viewModel: RecipeDetailViewModel = viewModel("RecipeViewModel", factory)
                     RecipeDetailScreen(
                         isDarkTheme = (application as BaseApplication).isDark.value,
                         recipeId = navBackStackEntry.arguments?.getInt("recipeId"),

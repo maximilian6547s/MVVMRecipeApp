@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
-import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeViewModel
 import com.maximcuker.mvvmrecipeapp.util.DEFAULT_RECIPE_IMAGE
 import com.maximcuker.mvvmrecipeapp.util.loadPicture
 
