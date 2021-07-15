@@ -10,6 +10,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maximcuker.mvvmrecipeapp.cashe.RecipeDao
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.maximcuker.mvvmrecipeapp.repository.RecipeRepository
@@ -35,7 +36,7 @@ class RecipeListViewModel
 constructor(
     private val repository: RecipeRepository,
     private @Named("auth_token") val token: String,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 
 ) : ViewModel() {
 
