@@ -3,6 +3,7 @@ package com.maximcuker.mvvmrecipeapp.di
 import androidx.room.Room
 import com.maximcuker.mvvmrecipeapp.cashe.RecipeDao
 import com.maximcuker.mvvmrecipeapp.cashe.database.AppDataBase
+import com.maximcuker.mvvmrecipeapp.cashe.model.RecipeEntityMapper
 import com.maximcuker.mvvmrecipeapp.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
@@ -25,7 +26,14 @@ object CacheModule {
 
     @Singleton
     @Provides
-    fun provideRecipeDao(app: AppDataBase): RecipeDao {
-        return app.recipeDao()
+    fun provideRecipeDao(db: AppDataBase): RecipeDao {
+        return db.recipeDao()
     }
+
+    @Singleton
+    @Provides
+    fun provideCacheRecipeMapper(): RecipeEntityMapper {
+        return RecipeEntityMapper()
+    }
+
 }

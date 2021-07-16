@@ -60,4 +60,3 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
         return initial.map { mapFromDomainModel(it) }
     }
 }
-}
