@@ -82,29 +82,10 @@ fun RecipeView(
                             style = MaterialTheme.typography.caption
                         )
                     }
-                    recipe.description?.let { description ->
-                        if (description != "N/A") {
-                            Text(
-                                text = description,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                style = MaterialTheme.typography.body1
-                            )
-                        }
-                    }
+
                     for (ingredient in recipe.ingredients) {
                         Text(
                             text = ingredient,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 4.dp),
-                            style = MaterialTheme.typography.body1
-                        )
-                    }
-                    recipe.cookingInstructions?.let { instructions ->
-                        Text(
-                            text = instructions,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 4.dp),

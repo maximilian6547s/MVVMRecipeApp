@@ -25,7 +25,7 @@ class SearchRecipes(
         try {
             emit(DataState.loading<List<Recipe>>())
 
-            //just to show progressbar
+            //just to show pagnation/progressbar
             delay(1000)
 
             //TODO("Check if there is an internet connection")

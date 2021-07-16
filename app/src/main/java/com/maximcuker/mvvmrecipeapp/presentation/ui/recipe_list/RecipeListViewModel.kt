@@ -12,11 +12,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maximcuker.mvvmrecipeapp.cashe.RecipeDao
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
+import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.SearchRecipes
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.maximcuker.mvvmrecipeapp.repository.RecipeRepository
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
@@ -34,6 +37,7 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel
 @Inject
 constructor(
+    private val searchRecipes: SearchRecipes,
     private val repository: RecipeRepository,
     private @Named("auth_token") val token: String,
     private val savedStateHandle: SavedStateHandle,
@@ -115,40 +119,51 @@ constructor(
     }
 
     //use case #1
-    private suspend fun newSearch() {
-        loading.value = true
+    private fun newSearch() {
+        Log.d(TAG, "newSearch: query: ${query.value}, page: ${page.value}")
         resetSearchState()
-        delay(1000)
 
-        val result = repository.search(
-            token, 1, query = query.value
-        )
+        searchRecipes.execute(
+            token = token,
+            page = page.value,
+            query = query.value
+        ).onEach {dataState ->
+            loading.value = dataState.loading
+            dataState.data?.let {list->
+                recipes.value = list
+            }
+            dataState.error?.let {error ->
+                Log.d(TAG, "newSearch: error: ${error}")
+                //TODO("Handle error")
+            }
 
-        recipes.value = result
-
-        loading.value = false
+        }.launchIn(viewModelScope) //if view model lifecycle dies? scope also dies with all jobs
     }
 
     //use case #2
-    private suspend fun nextPage() {
+    private fun nextPage() {
         //prevent duplicate events due to recompose happening to quickly
         if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
-            loading.value = true
             incrementPage()
             Log.d(TAG, "nextPage: triggered: ${page.value}")
 
-            //just to show pagination
-            delay(1000)
             if (page.value > 1) {
-                val result = repository.search(
+                searchRecipes.execute(
                     token = token,
                     page = page.value,
                     query = query.value
-                )
-                Log.d(TAG, "nextPage: ${result}")
-                appendRecipes(result)
+                ).onEach {dataState ->
+                    loading.value = dataState.loading
+                    dataState.data?.let {list->
+                        appendRecipes(list)
+                    }
+                    dataState.error?.let {error ->
+                        Log.d(TAG, "nextPage: error: ${error}")
+                        //TODO("Handle error")
+                    }
+
+                }.launchIn(viewModelScope) //if view model lifecycle dies? scope also dies with all jobs
             }
-            loading.value = false
         }
     }
 
