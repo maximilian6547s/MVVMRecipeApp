@@ -2,6 +2,7 @@ package com.maximcuker.mvvmrecipeapp.di
 
 import com.maximcuker.mvvmrecipeapp.cashe.RecipeDao
 import com.maximcuker.mvvmrecipeapp.cashe.model.RecipeEntityMapper
+import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.RestoreRecipes
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.SearchRecipes
 import com.maximcuker.mvvmrecipeapp.network.RecipeService
 import com.maximcuker.mvvmrecipeapp.network.model.RecipeDtoMapper
@@ -30,4 +31,17 @@ object InteractorsModule {
             entityMapper = recipeEntityMapper
         )
     }
+
+    @ViewModelScoped
+    @Provides
+    fun provideRestoreRecipes(
+        recipeDao: RecipeDao,
+        recipeEntityMapper: RecipeEntityMapper,
+    ):RestoreRecipes {
+        return RestoreRecipes(
+            recipeDao = recipeDao,
+            entityMapper = recipeEntityMapper
+        )
+    }
+
 }

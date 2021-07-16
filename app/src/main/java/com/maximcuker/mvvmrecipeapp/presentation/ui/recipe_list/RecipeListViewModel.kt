@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maximcuker.mvvmrecipeapp.cashe.RecipeDao
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
+import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.RestoreRecipes
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.SearchRecipes
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.maximcuker.mvvmrecipeapp.repository.RecipeRepository
@@ -38,7 +39,7 @@ class RecipeListViewModel
 @Inject
 constructor(
     private val searchRecipes: SearchRecipes,
-    private val repository: RecipeRepository,
+    private val restoreRecipes: RestoreRecipes,
     private @Named("auth_token") val token: String,
     private val savedStateHandle: SavedStateHandle,
 
@@ -101,21 +102,21 @@ constructor(
         }
     }
 
-    private suspend fun restoreState() {
-        loading.value = true
-        val results: MutableList<Recipe> = mutableStateListOf()
-        for (p in 1..page.value) {
-            val result = repository.search(
-                token = token,
-                page = p,
-                query = query.value
-            )
-            results.addAll(result)
-            if (p == page.value) {
-                recipes.value = results
-                loading.value = false
+    private fun restoreState() {
+        restoreRecipes.execute(
+            page = page.value,
+            query = query.value
+        ).onEach {dataState ->
+            loading.value = dataState.loading
+            dataState.data?.let {list->
+                recipes.value = list
             }
-        }
+            dataState.error?.let {error ->
+                Log.d(TAG, "restoreState: error: ${error}")
+                //TODO("Handle error")
+            }
+
+        }.launchIn(viewModelScope) //if view model lifecycle dies? scope also dies with all jobs
     }
 
     //use case #1
