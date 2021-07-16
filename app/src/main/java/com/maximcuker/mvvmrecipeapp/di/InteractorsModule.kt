@@ -2,6 +2,7 @@ package com.maximcuker.mvvmrecipeapp.di
 
 import com.maximcuker.mvvmrecipeapp.cashe.RecipeDao
 import com.maximcuker.mvvmrecipeapp.cashe.model.RecipeEntityMapper
+import com.maximcuker.mvvmrecipeapp.interactors.recipe.GetRecipe
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.RestoreRecipes
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.SearchRecipes
 import com.maximcuker.mvvmrecipeapp.network.RecipeService
@@ -40,6 +41,22 @@ object InteractorsModule {
     ):RestoreRecipes {
         return RestoreRecipes(
             recipeDao = recipeDao,
+            entityMapper = recipeEntityMapper
+        )
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetRecipe(
+        recipeService: RecipeService,
+        recipeDao: RecipeDao,
+        recipeEntityMapper: RecipeEntityMapper,
+        recipeDtoMapper: RecipeDtoMapper
+    ):GetRecipe {
+        return GetRecipe(
+            recipeService = recipeService,
+            recipeDao = recipeDao,
+            recipeDtoMapper = recipeDtoMapper,
             entityMapper = recipeEntityMapper
         )
     }
