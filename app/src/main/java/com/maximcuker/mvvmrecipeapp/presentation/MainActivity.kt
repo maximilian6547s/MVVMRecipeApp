@@ -3,6 +3,7 @@ package com.maximcuker.mvvmrecipeapp.presentation
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkCapabilities.*
 import android.net.NetworkRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,12 +15,18 @@ import androidx.compose.ui.viewinterop.viewModel
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import com.maximcuker.mvvmrecipeapp.interactors.app.DoesNetworkHaveInternet
 import com.maximcuker.mvvmrecipeapp.presentation.navigation.Screen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailViewModel
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint //entry point also must be in an activity(host)
 class MainActivity : AppCompatActivity() {
@@ -28,13 +35,25 @@ class MainActivity : AppCompatActivity() {
     lateinit var cm: ConnectivityManager
 
     val networkRequest = NetworkRequest.Builder()
-        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .addCapability(NET_CAPABILITY_INTERNET)
         .build()
 
     val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
             Log.d(TAG, "onAvailable: ${network}")
+            val networkCapabilities = cm.getNetworkCapabilities(network)
+            val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
+            if (hasInternetCapability == true) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val hasInternet = DoesNetworkHaveInternet.execute()
+                    if (hasInternet) {
+                        withContext(Main) {
+                            Log.d(TAG, "onAvailable: This network has internet ${network}")
+                        }
+                    }
+                }
+            }
         }
 
         override fun onLost(network: Network) {
