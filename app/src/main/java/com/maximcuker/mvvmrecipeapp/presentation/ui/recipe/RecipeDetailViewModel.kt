@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.interactors.recipe.GetRecipe
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeEvent.*
+import com.maximcuker.mvvmrecipeapp.presentation.ui.util.DialogQueue
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -30,8 +31,12 @@ constructor(
 ) : ViewModel() {
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
+
     val loading = mutableStateOf(false)
+
     val onLoad: MutableState<Boolean> = mutableStateOf(false)
+
+    val dialogQueue = DialogQueue()
 
     init {
         // restore if process dies
@@ -52,6 +57,7 @@ constructor(
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "onTriggerEvent: Exception ${e}, ${e.cause}")
+
             }
         }
     }
@@ -67,7 +73,7 @@ constructor(
 
             dataState.error?.let { error ->
                 Log.e(TAG, "getRecipe: ${error}")
-                //TODO("Handle error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
         }.launchIn(viewModelScope)
 

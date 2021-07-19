@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.maximcuker.mvvmrecipeapp.presentation.components.*
+import com.maximcuker.mvvmrecipeapp.presentation.ui.util.DialogQueue
+import java.util.*
 
 private val LightThemeColors = lightColors(
     primary = Blue600,
@@ -48,6 +50,7 @@ fun AppTheme(
     darkTheme: Boolean,
     displayProgressBar: Boolean,
     scaffoldState: ScaffoldState,
+    dialogQueue: Queue<GenericDialogInfo>,
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
@@ -68,31 +71,22 @@ fun AppTheme(
                 },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
-//            Dialog example
-            val isShowing = remember { mutableStateOf(true) }
-            if (isShowing.value) {
-                val dialogInfo = GenericDialogInfo.Builder()
-                    .title("Error")
-                    .onDismiss { isShowing.value = false }
-                    .description("Hey look a dialog description")
-                    .positiveAction(PositiveAction(
-                        positiveBtnTxt = "Ok",
-                        onPositiveAction = { isShowing.value = false }
-                    ))
-                    .negativeAction(NegativeAction(
-                            negativeBtnTxt = "Cancel",
-                            onNegativeAction = { isShowing.value = false }
-                    ))
-                    .build()
-
-                GenericDialog(
-                    onDismiss = dialogInfo.onDismiss,
-                    title = dialogInfo.title,
-                    description = dialogInfo.description,
-                    positiveAction = dialogInfo.positiveAction,
-                    negativeAction = dialogInfo.negativeAction
-                )
-            }
+            ProcessDialogQueue(dialogQueue = dialogQueue)
         }
+    }
+}
+
+@Composable
+fun ProcessDialogQueue(
+    dialogQueue: Queue<GenericDialogInfo>
+) {
+    dialogQueue.peek()?.let { dialogInfo ->
+        GenericDialog(
+            onDismiss = dialogInfo.onDismiss,
+            title = dialogInfo.title,
+            description = dialogInfo.description,
+            positiveAction = dialogInfo.positiveAction,
+            negativeAction = dialogInfo.negativeAction,
+        )
     }
 }

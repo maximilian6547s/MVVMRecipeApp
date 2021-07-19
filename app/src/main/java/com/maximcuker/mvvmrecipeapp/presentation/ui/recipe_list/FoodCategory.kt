@@ -1,9 +1,11 @@
 package com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list
 
 import androidx.compose.runtime.mutableStateListOf
+import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.FoodCategory.*
 import java.util.*
 
-enum class FoodCategory (val value:String) {
+enum class FoodCategory(val value: String) {
+    ERROR("error"),
     CHICKEN("Chicken"),
     BEEF("Beef"),
     SOUP("Soup"),
@@ -15,15 +17,16 @@ enum class FoodCategory (val value:String) {
     DONUT("Donut"),
 }
 
-fun getAllFoodCategories(): List<FoodCategory>{
-    return listOf(FoodCategory.CHICKEN,
-        FoodCategory.BEEF, FoodCategory.SOUP,
-        FoodCategory.DESSERT, FoodCategory.VEGETARIAN, FoodCategory.MILK,
-        FoodCategory.VEGAN, FoodCategory.PIZZA, FoodCategory.DONUT
+fun getAllFoodCategories(): List<FoodCategory> {
+    return listOf(
+        ERROR, CHICKEN,
+        BEEF, SOUP,
+        DESSERT, VEGETARIAN, MILK,
+        VEGAN, PIZZA, DONUT
     )
 }
 
 fun getFoodCategory(value: String): FoodCategory? {
-    val map = FoodCategory.values().associateBy(FoodCategory::value)
+    val map = values().associateBy(FoodCategory::value)
     return map[value]
 }

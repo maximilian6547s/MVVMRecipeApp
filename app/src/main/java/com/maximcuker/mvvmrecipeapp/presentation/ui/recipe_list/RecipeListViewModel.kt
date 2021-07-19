@@ -10,6 +10,7 @@ import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.RestoreRecipes
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.SearchRecipes
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
+import com.maximcuker.mvvmrecipeapp.presentation.ui.util.DialogQueue
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -51,7 +52,9 @@ constructor(
 
     val page = mutableStateOf(1)
 
-    private var recipeListScrollPosition = 0
+    var recipeListScrollPosition = 0
+
+    val dialogQueue = DialogQueue()
 
     init {
         // restore state if process dies
@@ -106,7 +109,7 @@ constructor(
             }
             dataState.error?.let {error ->
                 Log.d(TAG, "restoreState: error: ${error}")
-                //TODO("Handle error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope) //if view model lifecycle dies? scope also dies with all jobs
@@ -128,7 +131,7 @@ constructor(
             }
             dataState.error?.let {error ->
                 Log.d(TAG, "newSearch: error: ${error}")
-                //TODO("Handle error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope) //if view model lifecycle dies? scope also dies with all jobs
@@ -153,7 +156,7 @@ constructor(
                     }
                     dataState.error?.let {error ->
                         Log.d(TAG, "nextPage: error: ${error}")
-                        //TODO("Handle error")
+                        dialogQueue.appendErrorMessage("Error", error)
                     }
 
                 }.launchIn(viewModelScope) //if view model lifecycle dies? scope also dies with all jobs

@@ -28,6 +28,12 @@ class SearchRecipes(
             //just to show pagnation/progressbar
             delay(1000)
 
+            //force error for testing
+            //TODO("Delete in future")
+            if (query == "error") {
+                throw Exception("Search failed")
+            }
+
             //TODO("Check if there is an internet connection")
             val recipes = getRecipesFromNetwork(token, page, query)
 
