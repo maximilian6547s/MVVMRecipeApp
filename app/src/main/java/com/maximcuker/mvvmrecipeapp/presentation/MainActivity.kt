@@ -1,13 +1,7 @@
 package com.maximcuker.mvvmrecipeapp.presentation
 
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkCapabilities.*
-import android.net.NetworkRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.setContent
@@ -15,62 +9,29 @@ import androidx.compose.ui.viewinterop.viewModel
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
-import com.maximcuker.mvvmrecipeapp.interactors.app.DoesNetworkHaveInternet
 import com.maximcuker.mvvmrecipeapp.presentation.navigation.Screen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailViewModel
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListViewModel
+import com.maximcuker.mvvmrecipeapp.presentation.util.ConnectivityManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint //entry point also must be in an activity(host)
 class MainActivity : AppCompatActivity() {
 
-    val TAG = "c-Manager"
-    lateinit var cm: ConnectivityManager
-
-    val networkRequest = NetworkRequest.Builder()
-        .addCapability(NET_CAPABILITY_INTERNET)
-        .build()
-
-    val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            super.onAvailable(network)
-            Log.d(TAG, "onAvailable: ${network}")
-            val networkCapabilities = cm.getNetworkCapabilities(network)
-            val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
-            if (hasInternetCapability == true) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val hasInternet = DoesNetworkHaveInternet.execute()
-                    if (hasInternet) {
-                        withContext(Main) {
-                            Log.d(TAG, "onAvailable: This network has internet ${network}")
-                        }
-                    }
-                }
-            }
-        }
-
-        override fun onLost(network: Network) {
-            super.onLost(network)
-            Log.d(TAG, "onLost: ${network}")
-        }
-    }
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
 
     override fun onStart() {
         super.onStart()
-        cm = this.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.registerNetworkCallback(networkRequest, networkCallback)
+        connectivityManager.registerConnectionObserver(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        cm.unregisterNetworkCallback(networkCallback)
+        connectivityManager.unRegisterConnectionObserver(this)
     }
 
     @ExperimentalMaterialApi
