@@ -1,13 +1,16 @@
 package com.maximcuker.mvvmrecipeapp.presentation.theme
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.maximcuker.mvvmrecipeapp.presentation.components.CircularIndeterminateProgressBar
 import com.maximcuker.mvvmrecipeapp.presentation.components.DefaultSnackbar
 
@@ -65,6 +68,35 @@ fun AppTheme(
                 },
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
+            val isShowing = remember { mutableStateOf(true) }
+            if (isShowing.value) {
+                AlertDialog(
+                    onDismissRequest = { isShowing.value = false },
+                    title = { Text(text = "Title") },
+                    text = { Text(text = "Description") },
+                    buttons = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Button(
+                                modifier = Modifier.padding(8.dp),
+                                colors = buttonColors(backgroundColor = MaterialTheme.colors.onError),
+                                onClick = { isShowing.value = false }
+                            ) {
+                                Text(text = "Cancel")
+                            }
+                            Button(
+                                modifier = Modifier.padding(8.dp),
+                                onClick = { isShowing.value = false }
+                            ) {
+                                Text(text = "Ok")
+                            }
+                        }
+                    }
+                )
+            }
         }
     }
 }
