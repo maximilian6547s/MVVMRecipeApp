@@ -41,7 +41,7 @@ fun RecipeCard(
                     bitmap = img.asImageBitmap(),
                     contentDescription = "Recipe featured image",
                     modifier = Modifier.fillMaxWidth()
-                        .preferredHeight(225.dp),
+                        .height(225.dp),
                     contentScale = ContentScale.Crop
                 )
             }

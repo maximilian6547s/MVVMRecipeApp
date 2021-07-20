@@ -6,6 +6,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.findNavController
 import com.maximcuker.mvvmrecipeapp.R
 import com.maximcuker.mvvmrecipeapp.presentation.components.RecipeList
@@ -14,6 +15,7 @@ import com.maximcuker.mvvmrecipeapp.presentation.theme.AppTheme
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 fun RecipeListScreen(

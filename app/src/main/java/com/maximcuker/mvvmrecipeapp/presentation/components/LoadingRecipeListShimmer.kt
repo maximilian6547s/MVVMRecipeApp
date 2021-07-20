@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -20,10 +20,10 @@ fun LoadingRecipeListShimmer(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        val cardWidthPx = with(AmbientDensity.current) {
+        val cardWidthPx = with(LocalDensity.current) {
             ((maxWidth - (padding*2)).toPx())
         }
-        val cardHeightPx = with(AmbientDensity.current) {
+        val cardHeightPx = with(LocalDensity.current) {
             ((imageHeight - (padding)).toPx())
         }
         val gradientWidth: Float = (0.2f * cardHeightPx)
