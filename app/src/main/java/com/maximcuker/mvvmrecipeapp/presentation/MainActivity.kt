@@ -9,6 +9,7 @@ import androidx.compose.ui.viewinterop.viewModel
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import com.maximcuker.mvvmrecipeapp.datastore.SettingsDataStore
 import com.maximcuker.mvvmrecipeapp.presentation.navigation.Screen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailScreen
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeDetailViewModel
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var connectivityManager: ConnectivityManager
+
+    @Inject
+    lateinit var settingsDataStore: SettingsDataStore
 
     override fun onStart() {
         super.onStart()
@@ -51,9 +55,9 @@ class MainActivity : AppCompatActivity() {
                     //viewModel - is part of compose.ui dependency
                     val viewModel: RecipeListViewModel = viewModel("RecipeListViewModel", factory)
                     RecipeListScreen(
-                        isDarkTheme = (application as BaseApplication).isDark.value,
+                        isDarkTheme = settingsDataStore.isDark.value,
                         isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
-                        onToggleTheme = (application as BaseApplication)::toggleLightTheme,
+                        onToggleTheme = settingsDataStore::toggleTheme,
                         onNavigateToRecipeDetailScreen = navController::navigate,
                         viewModel = viewModel
                     )
@@ -71,12 +75,11 @@ class MainActivity : AppCompatActivity() {
                     )
                     val viewModel: RecipeDetailViewModel = viewModel("RecipeViewModel", factory)
                     RecipeDetailScreen(
-                        isDarkTheme = (application as BaseApplication).isDark.value,
+                        isDarkTheme = settingsDataStore.isDark.value,
                         isNetworkAvailable = connectivityManager.isNetworkAvailable.value,
                         recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel
                     )
-
                 }
             }
         }
