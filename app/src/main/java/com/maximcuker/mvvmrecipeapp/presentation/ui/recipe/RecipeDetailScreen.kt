@@ -19,6 +19,7 @@ import com.maximcuker.mvvmrecipeapp.util.TAG
 @Composable
 fun RecipeDetailScreen(
     isDarkTheme: Boolean,
+    isNetworkAvailable: Boolean,
     recipeId: Int?,
     viewModel: RecipeDetailViewModel,
 
@@ -41,6 +42,7 @@ fun RecipeDetailScreen(
 
         AppTheme(
             displayProgressBar = loading,
+            isNetworkAvailable = isNetworkAvailable,
             scaffoldState = scaffoldState,
             darkTheme = isDarkTheme,
             dialogQueue = dialogQueue.queue.value,
