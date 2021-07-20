@@ -11,6 +11,7 @@ import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.RestoreRecipes
 import com.maximcuker.mvvmrecipeapp.interactors.recipe_list.SearchRecipes
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe_list.RecipeListEvent.*
 import com.maximcuker.mvvmrecipeapp.presentation.ui.util.DialogQueue
+import com.maximcuker.mvvmrecipeapp.presentation.util.ConnectivityManager
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -34,6 +35,7 @@ class RecipeListViewModel
 constructor(
     private val searchRecipes: SearchRecipes,
     private val restoreRecipes: RestoreRecipes,
+    private val connectivityManager: ConnectivityManager,
     private @Named("auth_token") val token: String,
     private val savedStateHandle: SavedStateHandle,
 
@@ -123,7 +125,8 @@ constructor(
         searchRecipes.execute(
             token = token,
             page = page.value,
-            query = query.value
+            query = query.value,
+            isNetworkAvailable = connectivityManager.isNetworkAvailable.value
         ).onEach {dataState ->
             loading.value = dataState.loading
             dataState.data?.let {list->
@@ -148,7 +151,8 @@ constructor(
                 searchRecipes.execute(
                     token = token,
                     page = page.value,
-                    query = query.value
+                    query = query.value,
+                    isNetworkAvailable = connectivityManager.isNetworkAvailable.value
                 ).onEach {dataState ->
                     loading.value = dataState.loading
                     dataState.data?.let {list->

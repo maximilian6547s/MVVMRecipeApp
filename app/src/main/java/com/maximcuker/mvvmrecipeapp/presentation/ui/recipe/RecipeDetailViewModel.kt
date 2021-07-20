@@ -10,6 +10,7 @@ import com.maximcuker.mvvmrecipeapp.domain.model.Recipe
 import com.maximcuker.mvvmrecipeapp.interactors.recipe.GetRecipe
 import com.maximcuker.mvvmrecipeapp.presentation.ui.recipe.RecipeEvent.*
 import com.maximcuker.mvvmrecipeapp.presentation.ui.util.DialogQueue
+import com.maximcuker.mvvmrecipeapp.presentation.util.ConnectivityManager
 import com.maximcuker.mvvmrecipeapp.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -28,7 +29,8 @@ constructor(
     private val getRecipe: GetRecipe,
     private @Named("auth_token") val token: String,
     private val state: SavedStateHandle,
-) : ViewModel() {
+    private val connectivityManager: ConnectivityManager,
+    ) : ViewModel() {
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
 
@@ -62,13 +64,13 @@ constructor(
         }
     }
 
-    private fun getRecipe(id:Int) {
-        getRecipe.execute(id, token).onEach { dataState ->
+    private fun getRecipe(id: Int) {
+        getRecipe.execute(id, token,connectivityManager.isNetworkAvailable.value).onEach { dataState ->
             loading.value = dataState.loading
 
             dataState.data?.let { data ->
                 recipe.value = data
-                state.set(STATE_KEY_RECIPE,data.id)
+                state.set(STATE_KEY_RECIPE, data.id)
             }
 
             dataState.error?.let { error ->

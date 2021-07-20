@@ -20,6 +20,7 @@ class SearchRecipes(
     fun execute(
         token: String,
         page: Int,
+        isNetworkAvailable: Boolean,
         query: String
     ): Flow<DataState<List<Recipe>>> = flow {
         try {
@@ -28,11 +29,12 @@ class SearchRecipes(
             //just to show pagnation/progressbar
             delay(1000)
 
-            //TODO("Check if there is an internet connection")
-            val recipes = getRecipesFromNetwork(token, page, query)
+            if (isNetworkAvailable) {
+                val recipes = getRecipesFromNetwork(token, page, query)
 
-            //insert to the cache
-            recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
+                //insert to the cache
+                recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
+            }
 
             // query the cache
             val cacheResult = if (query.isBlank()) {
